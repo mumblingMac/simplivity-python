@@ -75,6 +75,7 @@ class ResourceTest(unittest.TestCase):
 
     @mock.patch.object(Connection, "get")
     def test_get_all_with_pagination(self, mock_get):
+        mock_get.return_value={None:[1,2,3]}
         result = self.resource_client.get_all('/api/resource', pagination=True, page_size=10)
         self.assertIsInstance(result, Pagination)
 
