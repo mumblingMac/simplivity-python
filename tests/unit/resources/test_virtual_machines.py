@@ -1,5 +1,5 @@
 ###
-# (C) Copyright [2019] Hewlett Packard Enterprise Development LP
+# (C) Copyright [2019-2020] Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ class VirtualMachinesTest(unittest.TestCase):
         with self.assertRaises(exceptions.HPESimpliVityResourceNotFound) as error:
             self.machines.get_by_name(vm_name)
 
-        self.assertEquals(error.exception.message, "Resource not found with the name {}".format(vm_name))
+        self.assertEquals(error.exception.msg, "Resource not found with the name {}".format(vm_name))
 
     @mock.patch.object(Connection, "get")
     def test_get_by_id_found(self, mock_get):
@@ -88,7 +88,7 @@ class VirtualMachinesTest(unittest.TestCase):
         with self.assertRaises(exceptions.HPESimpliVityResourceNotFound) as error:
             self.machines.get_by_id(vm_id)
 
-        self.assertEquals(error.exception.message, "Resource not found with the id {}".format(vm_id))
+        self.assertEquals(error.exception.msg, "Resource not found with the id {}".format(vm_id))
 
     def test_get_by_data(self):
         resource_data = {'id': '12345'}
