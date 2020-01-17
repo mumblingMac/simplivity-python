@@ -99,7 +99,7 @@ class VirtualMachinesTest(unittest.TestCase):
 
     @mock.patch.object(Connection, "post")
     @mock.patch.object(Connection, "get")
-    def test_set_policy_in_bulk(self, mock_get, mock_post):
+    def test_set_policy_for_multiple_vms(self, mock_get, mock_post):
         mock_post.return_value = {}, {}
         vm1_data = {'name': 'name1', 'id': 'id1'}
         vm2_data = {'name': 'name2', 'id': 'id2'}
@@ -109,7 +109,7 @@ class VirtualMachinesTest(unittest.TestCase):
 
         mock_get.side_effect = [vm1_data, vm2_data]
 
-        self.machines.set_policy_in_bulk(policy_obj, vm_objs)
+        self.machines.set_policy_for_multiple_vms(policy_obj, vm_objs)
         mock_post.assert_called_once_with('/virtual_machines/set_policy',
                                           {'policy_id': 'id', 'virtual_machine_id': ['id1', 'id2']},
                                           custom_headers=None)
