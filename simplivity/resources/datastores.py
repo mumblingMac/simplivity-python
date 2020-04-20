@@ -107,7 +107,7 @@ class Datastores(ResourceBase):
         """
         return Datastore(self._connection, self._client, data)
 
-    def create(self, datastore_name, cluster, policy, size=0, timeout=-1):
+    def create(self, datastore_name, cluster, policy, size=0, timeout=-1, single_replica=None):
         """Creates a new datastore.
 
         Args:
@@ -116,6 +116,7 @@ class Datastores(ResourceBase):
             policy: Object/name of the policy to assocaited with the new datastore.
             size: The size in bytes of the new datastore.
             timeout: Time out for the request in seconds.
+            single_replica: Indicaor to request if the new datastore create should be a single-replica datastore.
 
         Returns:
             object: Datastore object.
@@ -138,6 +139,9 @@ class Datastores(ResourceBase):
             "policy_id": policy.data['id'],
             "size": size
         }
+
+        if single_replica is not None:
+            data["single_replica"] = single_replica
 
         out = self._client.do_post(method_url, data, timeout, None)
         return self.get_by_id(out[0]["object_id"])

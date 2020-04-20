@@ -125,6 +125,36 @@ class DatastoresTest(unittest.TestCase):
 
     @mock.patch.object(Connection, "post")
     @mock.patch.object(Connection, "get")
+    def test_create_with_single_replica(self, mock_get, mock_post):
+        cluster_data = {'name': 'cluster1', 'id': '12345'}
+        cluster_obj = self.clusters.get_by_data(cluster_data)
+
+        policy_data = {'name': 'policy1', 'id': '67890'}
+        policy_obj = self.policies.get_by_data(policy_data)
+
+        datastore_data = {'name': 'datastore1', 'id': 'ABCDEF'}
+        datastore_size = 1024
+
+        mock_post.return_value = None, [{'object_id': datastore_data['id']}]
+        mock_get.return_value = {datastores.DATA_FIELD: [datastore_data]}
+
+        datastore = self.datastores.create(datastore_data['name'], cluster_obj, policy_obj, datastore_size, single_replica=True)
+
+        self.assertIsInstance(datastore, datastores.Datastore)
+        self.assertEqual(datastore.data, datastore_data)
+        mock_post.assert_called_once_with('/datastores',
+                                          {
+                                              'name': 'datastore1',
+                                              'omnistack_cluster_id': '12345',
+                                              'policy_id': '67890',
+                                              'size': 1024,
+                                              'single_replica': True
+                                          },
+                                          custom_headers=None
+                                          )
+
+    @mock.patch.object(Connection, "post")
+    @mock.patch.object(Connection, "get")
     def test_create_using_names(self, mock_get, mock_post):
         cluster_data = {'name': 'cluster1', 'id': '12345'}
 
